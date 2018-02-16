@@ -2,10 +2,15 @@
 
 //#include <Arduino.h>
 
+extern "C" {
+    #include <roboticscape.h>
+    #include <rc_usefulincludes.h>
+}
+
 #include <stdio.h>
 #include <stdint.h>
-#include <roboticscape.h>
-#include <rc_usefulincludes.h>
+//#include <roboticscape.h>
+//#include <rc_usefulincludes.h>
 
 #include "HX711.h"
 
@@ -160,3 +165,16 @@ void HX711::power_up() {
     rc_gpio_set_value_mmap(PD_SCK, LOW);
 }
 
+
+const int DOUT = 0, PD_SCK = 0;
+
+
+int main(void)
+{
+    HX711 weight(DOUT, PD_SCK, 2);
+    while(true)
+    {
+        weight.get_value(10); // find the average of 10 trials
+        sleep(1);
+    }
+}
