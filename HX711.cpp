@@ -171,10 +171,17 @@ const int DOUT = 0, PD_SCK = 0;
 
 int main(void)
 {
-    HX711 weight(DOUT, PD_SCK, 2);
+    HX711 loadcells(DOUT, PD_SCK, 128);
+
+    loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+    loadcells.tare();
+
+    printf("\nAfter setting up the scale:");
+    printf("\n%d", loadcells.get_units(5)); 
+
     while(true)
     {
-        weight.get_value(10); // find the average of 10 trials
+        printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
         sleep(1);
     }
 }
