@@ -176,6 +176,16 @@ int main(void)
     loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
     loadcells.tare();
 
+    printf("\nBefore setting up the scale:");
+    printf("read: \t\t");
+    printf("\n%d", loadcells.read());           // print a raw reading from the ADC
+
+    printf("read average: \t\t");
+    printf("\n%d"loadcells.read_average(20));   // print the average of 20 readings from the ADC
+
+    printf("get value: \t\t");
+    printf("\n%d"loadcells.get_value(5));
+
     printf("\nAfter setting up the scale:");
     printf("\n%d", loadcells.get_units(5)); 
 
