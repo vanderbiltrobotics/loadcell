@@ -178,20 +178,20 @@ int main(void)
 
     printf("\nBefore setting up the scale:");
     printf("read: \t\t");
-    printf("\n%d", loadcells.read());           // print a raw reading from the ADC
+    printf("\n%0.2d", loadcells.read());           // print a raw reading from the ADC
 
     printf("read average: \t\t");
-    printf("\n%d"loadcells.read_average(20));   // print the average of 20 readings from the ADC
+    printf("\n%0.2d"loadcells.read_average(20));   // print the average of 20 readings from the ADC
 
     printf("get value: \t\t");
-    printf("\n%d"loadcells.get_value(5));
+    printf("\n%0.2d"loadcells.get_value(5));
 
     printf("\nAfter setting up the scale:");
-    printf("\n%d", loadcells.get_units(5)); 
+    printf("\n%0.2d", loadcells.get_units(5)); 
 
     while(true)
     {
-        printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
+        printf("\n%0.2d", loadcells.get_units(10)); // find the average of 10 trials
         sleep(1);
     }
 }
