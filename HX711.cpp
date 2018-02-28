@@ -172,7 +172,7 @@ const int DOUT = 0, PD_SCK = 0;
 int main(void)
 {
     //HX711 loadcells(DOUT, PD_SCK, 128);
-	HX711 loadcells(97, 98, 128);
+	HX711 loadcells(49, 57, 128);
     //loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
     //loadcells.tare();
 
@@ -193,7 +193,7 @@ int main(void)
     {
         //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
         printf("\n %d", loadcells.read()); 
-        rc_gpio_set_value_mmap(76, HIGH);
+        rc_gpio_set_value_mmap(116, HIGH);
         sleep(1);
     }
 }
