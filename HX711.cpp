@@ -25,11 +25,11 @@ uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin) {
     uint8_t i;
 
     for (i = 0; i < 8; ++i) {
-        rc_gpio_set_value_mmap(clockPin, HIGH);
+        rc_gpio_set_value(clockPin, HIGH);
         //if (bitOrder == LSBFIRST)
         //  value |= digitalRead(dataPin) << i;
-        value |= rc_gpio_get_value_mmap(dataPin) << (7 - i);
-        rc_gpio_set_value_mmap(clockPin, LOW);
+        value |= rc_gpio_get_value(dataPin) << (7 - i);
+        rc_gpio_set_value(clockPin, LOW);
     }
     return value;
 }
@@ -58,7 +58,7 @@ HX711::~HX711() {
 //}
 
 bool HX711::is_ready() {
-    return rc_gpio_get_value_mmap(DOUT) == LOW;
+    return rc_gpio_get_value(DOUT) == LOW;
 }
 
 void HX711::set_gain(uint8_t gain) {
@@ -74,7 +74,7 @@ void HX711::set_gain(uint8_t gain) {
             break;
     }
 
-    rc_gpio_set_value_mmap(PD_SCK, LOW);
+    rc_gpio_set_value(PD_SCK, LOW);
 }
 
 
@@ -95,8 +95,8 @@ long HX711::read() {
 
         // set the channel and the gain factor for the next reading using the clock pin
         for (unsigned int i = 0; i < GAIN; i++) {
-            rc_gpio_set_value_mmap(PD_SCK, HIGH);
-            rc_gpio_set_value_mmap(PD_SCK, LOW);
+            rc_gpio_set_value(PD_SCK, HIGH);
+            rc_gpio_set_value(PD_SCK, LOW);
         }
 
         // Replicate the most significant bit to pad out a 32-bit signed integer
@@ -157,12 +157,12 @@ long HX711::get_offset() {
 }
 
 void HX711::power_down() {
-    rc_gpio_set_value_mmap(PD_SCK, LOW);
-    rc_gpio_set_value_mmap(PD_SCK, HIGH);
+    rc_gpio_set_value(PD_SCK, LOW);
+    rc_gpio_set_value(PD_SCK, HIGH);
 }
 
 void HX711::power_up() {
-    rc_gpio_set_value_mmap(PD_SCK, LOW);
+    rc_gpio_set_value(PD_SCK, LOW);
 }
 
 
