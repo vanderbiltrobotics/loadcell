@@ -4,4 +4,4 @@
 # The output binary is 'weightsensor'. Run that to test it.
 # - Josh P
 
-g++ HX711.cpp -o weightsensor -std=c++11 -lm -lpthread -lrt -lroboticscape
+g++ -o weightsensor -std=c++11 main.cpp HX711.cpp -lm -lpthread -lrt -lroboticscape

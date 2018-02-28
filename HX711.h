@@ -4,72 +4,82 @@
 #define HX711_h
 
 
+//enum class for amplifier modes (channel/gain combination)
+enum class HX711_MODE
+  {
+    NONE = 0,         //default mode with no channel or gain
+    A_128 = 1,        //channel A gain 128
+    A_64 = 3,         //channel B gain 32
+    B_32 = 2          //channel A gain 64
+  };
 
 class HX711
 {
-	private:
-		uint8_t PD_SCK;	// Power Down and Serial Clock Input Pin
-		uint8_t DOUT;		// Serial Data Output Pin
-		uint8_t GAIN;		// amplification factor
-		long OFFSET = 0;	// used for tare weight
-		float SCALE = 1;	// used to return weight in grams, kg, ounces, whatever
+private:
+  const uint8_t gains_[4] = {0, 128, 32, 64}; //hardcoded gains
+  
+  uint8_t pd_sck_;	// Power Down and Serial Clock Input Pin
+  uint8_t dout_;        // Serial Data Output Pin
+  HX711_MODE mode_ = HX711_MODE::NONE;   //default mode of NONE to force user to set it
+  long offset_ = 0;	// used for tare weight
+  float scale_ = 1;	// used to return weight in grams, kg, ounces, whatever
 
-	public:
-		// define clock and data pin, channel, and gain factor
-		// channel selection is made by passing the appropriate gain: 128 or 64 for channel A, 32 for channel B
-		// gain: 128 or 64 for channel A; channel B works with 32 gain factor only
-		HX711(uint8_t dout, uint8_t pd_sck, uint8_t gain = 128);
+public:
 
-		HX711() = default;
+  HX711() = default;
 
-		virtual ~HX711() = default;
+  // define clock and data pin, channel, and mode
+  HX711(uint8_t dout, uint8_t pd_sck, HX711_MODE mode);
 
-		// Allows to set the pins and gain later than in the constructor
-		void begin(uint8_t dout, uint8_t pd_sck, uint8_t gain = 128);
+  virtual ~HX711() = default;
 
-		// check if HX711 is ready
-		// from the datasheet: When output data is not ready for retrieval, digital output pin DOUT is high. Serial clock
-		// input PD_SCK should be low. When DOUT goes to low, it indicates data is ready for retrieval.
-		bool is_ready();
+  // Allows to set the pins and gain later than in the constructor
+  void begin(uint8_t dout, uint8_t pd_sck, HX711_MODE mode);
 
-		// set the gain factor; takes effect only after a call to read()
-		// channel A can be set for a 128 or 64 gain; channel B has a fixed 32 gain
-		// depending on the parameter, the channel is also set to either A or B
-		void set_gain(uint8_t gain = 128);
+  // check if HX711 is ready
+  // from the datasheet: When output data is not ready for retrieval, digital output pin dout_ is high. Serial clock
+  // input pd_sck_ should be low. When dout_y goes to low, it indicates data is ready for retrieval.
+  bool is_ready();
 
-		// waits for the chip to be ready and returns a reading
-		long read();
+  //sets the mode to change channel/gain. See the HX711_MODe enum class for options
+  void set_mode(HX711_MODE mode);
 
-		// returns an average reading; times = how many times to read
-		long read_average(uint8_t times = 10);
+  // waits for the chip to be ready and returns a reading
+  long read();
 
-		// returns (read_average() - OFFSET), that is the current value without the tare weight; times = how many readings to do
-		double get_value(uint8_t times = 1);
+  // returns an average reading; times = how many times to read
+  long read_average(uint8_t times = 10);
 
-		// returns get_value() divided by SCALE, that is the raw value divided by a value obtained via calibration
-		// times = how many readings to do
-		float get_units(uint8_t times = 1);
+  // returns (read_average() - offset_), that is the current value without the tare weight; times = how many readings to do
+  double get_value(uint8_t times = 1);
 
-		// set the OFFSET value for tare weight; times = how many times to read the tare value
-		void tare(uint8_t times = 10);
+  // returns get_value() divided by scale_, that is the raw value divided by a value obtained via calibration
+  // times = how many readings to do
+  float get_units(uint8_t times = 1);
 
-		// set the SCALE value; this value is used to convert the raw data to "human readable" data (measure units)
-		void set_scale(float scale = 1.f);
+  // set the offset_ value for tare weight; times = how many times to read the tare value
+  void tare(uint8_t times = 10);
 
-		// get the current SCALE
-		float get_scale();
+  // set the scale_ value; this value is used to convert the raw data to "human readable" data (measure units)
+  void set_scale(float scale = 1.f);
 
-		// set OFFSET, the value that's subtracted from the actual reading (tare weight)
-		void set_offset(long offset = 0);
+  // get the current scale_
+  float get_scale();
 
-		// get the current OFFSET
-		long get_offset();
+  // get the channel's gain
+  uint8_t get_gain();
 
-		// puts the chip into power down mode
-		void power_down();
+  // set offset_, the value that's subtracted from the actual reading (tare weight)
+  void set_offset(long offset = 0);
 
-		// wakes up the chip after power down mode
-		void power_up();
+  // get the current offset_
+  long get_offset();
+
+  // puts the chip into power down mode
+  void power_down();
+
+  // wakes up the chip after power down mode
+  void power_up();
 };
 
 #endif /* HX711_h */
