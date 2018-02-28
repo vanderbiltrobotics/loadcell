@@ -177,10 +177,10 @@ int main(void)
     loadcells.tare();
 
     printf("\nBefore setting up the scale:");
-    printf("read: \t\t");
-    printf("\n%d", loadcells.read());           // print a raw reading from the ADC
+    printf("\nread: \t\t");
+    printf("%d", loadcells.read());           // print a raw reading from the ADC
 
-    printf("read average: \t\t");
+    printf("\nread average: \t\t");
     printf("\n%d", loadcells.read_average(20));   // print the average of 20 readings from the ADC
 
     printf("get value: \t\t");
