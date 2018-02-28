@@ -172,7 +172,7 @@ const int DOUT = 0, PD_SCK = 0;
 int main(void)
 {
     //HX711 loadcells(DOUT, PD_SCK, 128);
-	HX711 loadcells(98, 97, 128);
+	HX711 loadcells(97, 98, 128);
     loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
     loadcells.tare();
 
