@@ -176,7 +176,7 @@ int main(void)
     loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
     loadcells.tare();
 
-    printf("\nBefore setting up the scale:");
+    /*printf("\nBefore setting up the scale:");
     printf("\nread: \t\t");
     printf("%d", loadcells.read());           // print a raw reading from the ADC
 
@@ -187,11 +187,12 @@ int main(void)
     printf("\n%d", loadcells.get_value(5));
 
     printf("\nAfter setting up the scale:");
-    printf("\n%d", loadcells.get_units(5)); 
+    printf("\n%d", loadcells.get_units(5)); */
 
     while(true)
     {
-        printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
+        //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
+        printf("\n %d", loadcells.read()); 
         sleep(1);
     }
 }
