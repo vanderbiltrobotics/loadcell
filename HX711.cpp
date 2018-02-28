@@ -193,6 +193,6 @@ int main(void)
     {
         //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
         printf("\n %d", loadcells.read()); 
-        sleep(.5);
+        sleep(1);
     }
 }
