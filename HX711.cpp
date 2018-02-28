@@ -173,8 +173,8 @@ int main(void)
 {
     //HX711 loadcells(DOUT, PD_SCK, 128);
 	HX711 loadcells(97, 98, 128);
-    loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
-    loadcells.tare();
+    //loadcells.set_scale(2280.0f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+    //loadcells.tare();
 
     /*printf("\nBefore setting up the scale:");
     printf("\nread: \t\t");
@@ -193,6 +193,6 @@ int main(void)
     {
         //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
         printf("\n %d", loadcells.read()); 
-        sleep(1);
+        sleep(.5);
     }
 }
