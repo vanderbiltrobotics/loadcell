@@ -22,14 +22,18 @@ extern "C" {
 
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin) {
     uint8_t value = 0;
-    uint8_t i;
 
-    for (i = 0; i < 8; ++i) {
+    for (uint8_t i = 0; i < 8; ++i) {
         rc_gpio_set_value_mmap(clockPin, HIGH);
         //if (bitOrder == LSBFIRST)
         //  value |= digitalRead(dataPin) << i;
         value |= rc_gpio_get_value_mmap(dataPin) << (7 - i);
         rc_gpio_set_value_mmap(clockPin, LOW);
+        // Added this delay here. Hopefully the problem was the IC
+        // couldn't respond fast enough to the clock changes.
+        // Other than that, everything looks good.
+        // - Josh
+        usleep(1);
     }
     return value;
 }
@@ -192,7 +196,7 @@ int main(void)
     while(true)
     {
         //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
-        printf("\n %d", loadcells.read()); 
+        printf("\n %d", loadcells.read());
         rc_gpio_set_value_mmap(116, HIGH);
         sleep(1);
     }
