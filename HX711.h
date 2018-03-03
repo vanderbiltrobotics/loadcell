@@ -3,6 +3,7 @@
 #ifndef HX711_h
 #define HX711_h
 
+#include<stdint.h>
 
 //enum class for amplifier modes (channel/gain combination)
 enum class HX711_MODE

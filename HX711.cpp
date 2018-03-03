@@ -25,12 +25,21 @@ uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin) {
 }
 
 HX711::HX711(uint8_t dout, uint8_t pd_sck, HX711_MODE mode)
-  : pd_sck_(pd_sck), dout_(dout) {
-    
+  : pd_sck_(pd_sck), dout_(dout)
+{
+  if(!rc_initialize()){
+    //do something because rc did not init
+  }
+  rc_set_pinmux_mode(pd_sck_, PINMUX_GPIO);
+  rc_set_pinmux_mode(dout_, PINMUX_GPIO);
+  rc_gpio_export(pd_sck_);
+  rc_gpio_export(dout_);
   rc_gpio_set_dir(pd_sck_, OUTPUT_PIN);
   rc_gpio_set_dir(dout_, INPUT_PIN);
 
-  set_mode(mode));
+  usleep(1);
+
+  set_mode(mode);
 }
 
 bool HX711::is_ready() {
@@ -44,7 +53,7 @@ void HX711::set_mode(HX711_MODE mode) {
 
 
 long HX711::read() {
-  if(mode_ != HX711::NONE){
+  if(mode_ != HX711_MODE::NONE){
 
     // wait for the chip to become ready
     if (is_ready()) {

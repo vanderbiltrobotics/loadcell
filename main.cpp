@@ -1,5 +1,12 @@
-#inlcude "HX711.h"
+#include "HX711.h"
 #include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
+
+extern "C" {
+#include<roboticscape.h>
+#include<rc_usefulincludes.h>
+}
 
 uint8_t pd_sck = 49;
 uint8_t dout = 57;
@@ -24,7 +31,7 @@ int main(void)
     printf("\nAfter setting up the scale:");
     printf("\n%d", loadcells.get_units(5)); */
 
-  while(true)
+  while(rc_get_state()!= EXITING)
     {
       //printf("\n%d", loadcells.get_units(10)); // find the average of 10 trials
       printf("\n %d", loadcells.read()); 
@@ -32,5 +39,5 @@ int main(void)
       sleep(1);
     }
 
-  return -1
+  return -1;
 } 
