@@ -1,0 +1,72 @@
+extern "C" {
+  #include <roboticscape.h>
+  #include <rc_usefulincludes.h>
+}
+
+#include <unistd.h>
+
+//variables and constants
+
+int slaveSelect = 1; //the slave select line, let it be 1 
+char dataReadyTX = 0x00; //byte of all 0 to write to MOSI in order to query the state of DOUT on MISO
+char dataReadyRX; //byte to contain DOUT state. In context, 0x00 means data is ready, 0x01 means data is not ready
+char dataRX[8]; //data RX array (comes in on MISO)
+char dataTX[8]; //data TX array (goes out on MOSI)
+
+//helper functions
+
+//set up blue
+bool init(){
+  //perform setup
+  if(rc_initialize() == -1){
+    //additional error logging here
+    return false;
+  }
+  //inits SPI 1.1 with auto slave select 1, at a clock frequency of 80 kHz
+  //SPI_MODE_CPOL0_CPHA1 means the clock is 0 when idle and data is read in on the falling edge
+  if(rc_spi_init(SS_MODE_AUTO, SPI_MODE_CPOL0_CPHA1, 80000, slaveSelect) == -1){ 
+    //additional error logging here
+    return false;
+  }
+  return true;
+}
+
+//check if data is available (hx711 DOUT is low)
+bool isReady(){
+  if(rc_spi_transfer(&dataReadyTX, 1, &dataReadyRX, slaveSelect) == -1){ //write 0x00 to MOSI and query the status of MISO
+    //additional error logging here
+    return -1;
+  }
+  return !(dataReadyRX | 0XFE) ; //since 0x00 is what we want, bitmask all but the last bit to 1 and then invert
+}
+
+void readData(){
+  dataRX = "\x00\x00\x00\x00\x00\x00\x00\x00"; //clear out dataRX
+  dataTX = "\xAA\xAA\xAA\xAA\xAA\xAA\x00\x00"; //seed for dataTX of 6 bytes of alternating 1's and 0's and two bytes of 0
+  dataTX[6] = "\x80"; //adds one more set of aternating 1 and 0 to the end of the chain, corresponding to an extra emulated clock pulse
+                      //sets the mode to channel A gain 128
+  if(rc_spi_transfer(dataTX, 8, dataRX, slaveSelect) == -1){ //read in data, each DOUT bit sampled twice
+    //additional error logging here
+    return -1;
+  }
+  
+  //convert the 8 byte dataRX to the 3 actual bytes of data (24 bits) by dropping the last two bytes and sampling every other bit
+  converData(dataRX); //not implemented since i'm lazy
+}
+
+int main(void){
+  
+  if(!init()){
+    //additional error logging here
+    return -1;
+  }
+  
+  while(!isReady()){
+    usleep(25000); // 25 ms
+  }    
+  
+  readData();
+  
+  return 1;
+  
+}
